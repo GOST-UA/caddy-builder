@@ -1,19 +1,21 @@
 # caddy-builder
 
-[![Build Status](https://travis-ci.org/stefanprodan/caddy-builder.svg?branch=master)](https://travis-ci.org/stefanprodan/caddy-builder)
+[![Build Status](https://travis-ci.org/GOST-UA/caddy-builder.svg?branch=master)](https://travis-ci.org/GOST-UA/caddy-builder)
 
-Build Caddy with plugins from source using Docker multi-build
+Forked from [stefanprodan/caddy-builder](https://github.com/stefanprodan/caddy-builder)
+
+Build Caddy with plugins using Docker multi-build
 
 ### Usage
 
 Clone the caddy-builder repository:
 
 ```bash
-$ git clone https://github.com/stefanprodan/caddy-builder.git
+$ git clone https://github.com/GOST-UA/caddy-builder.git
 $ cd caddy-builder
 ```
 
-Add the Caddy plugins that you want to the `plugins.go` file:
+Add the Caddy plugins that you want to the `main.go` file:
 
 ```go
 package caddyhttp
@@ -26,7 +28,7 @@ import (
 )
 ```
 
-Edit the [docker-compose](https://github.com/stefanprodan/caddy-builder/blob/master/docker-compose.yml) 
+Edit the [docker-compose](https://github.com/GOST-UA/caddy-builder/blob/master/docker-compose.yml)
 file and replace the image prefix with your own repo name:
 
 ```yaml
@@ -38,8 +40,8 @@ services:
       context: .
       dockerfile: Dockerfile
       args:
-        CADDY_VERSION: ${CADDY_VERSION:-0.10.9}
-    image: stefanprodan/caddy:${CADDY_VERSION:-0.10.9}
+        CADDY_VERSION: ${CADDY_VERSION:-1.0.5}
+    image: serbgost/caddy:${CADDY_VERSION:-1.0.5}
     container_name: caddy
     ports:
       - 80:80
@@ -50,7 +52,7 @@ services:
 Build the image with Docker Compose:
 
 ```bash
-CADDY_VERSION=0.10.9 docker-compose build caddy
+CADDY_VERSION=1.0.5 docker-compose build caddy
 ```
 
 Run Caddy container exposing 80, 443 and 9180 ports:
@@ -67,7 +69,7 @@ docker-compose down -v --rmi all
 
 ### Running Caddy with Docker
 
-The [stefanprodan/caddy](https://hub.docker.com/r/stefanprodan/caddy/) comes with a default Caddyfile that 
+The [stefanprodan/caddy](https://hub.docker.com/r/stefanprodan/caddy/) comes with a default Caddyfile that
 you can override by mounting your own config:
 
 ```bash
@@ -127,8 +129,8 @@ example.com {
 
 ### Running Caddy with Docker Swarm
 
-In order to deploy Caddy with a custom config on Docker Swarm, you need to use 
-Docker engine version 17.06 or later. The Caddy image has curl installed so 
+In order to deploy Caddy with a custom config on Docker Swarm, you need to use
+Docker engine version 17.06 or later. The Caddy image has curl installed so
 you can easily define a health check:
 
 ```yaml
@@ -143,7 +145,7 @@ volumes:
 
 services:
   caddy:
-    image: stefanprodan/caddy
+    image: serbgost/caddy
     ports:
       - 80:80
       - 443:443
@@ -154,7 +156,7 @@ services:
       - certs:/.caddy
     deploy:
       mode: replicated
-      replicas: 1    
+      replicas: 1
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:80"]
       interval: 5s
@@ -164,9 +166,5 @@ services:
 
 ### License
 
-The caddy-builder is MIT licensed and the Caddy 
-[source code](https://github.com/mholt/caddy/blob/master/LICENSE.txt) is Apache 2.0 licensed. 
-Because stefanprodan/caddy is built from source, it's not subject to the 
-[EULA](https://github.com/mholt/caddy/blob/545fa844bbd188c1e5bff6926e5c410e695571a0/dist/EULA.txt) for 
-Caddy's official binary distributions. If you plan to use Caddy for commercial purposes you should 
-run the official Caddy distribution. 
+The caddy-builder is MIT licensed and the Caddy
+[source code](http://github.com/caddyserver/caddy/blob/v1.0.5/LICENSE.txt) is Apache 2.0 licensed.
